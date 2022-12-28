@@ -1,5 +1,7 @@
 package facilitymanagementsystem.adt;
 
+import java.util.Iterator;
+
 /**
  *
  * @author Chan Wei Qi
@@ -32,7 +34,7 @@ public interface BinaryTreeInterface<T> {
   public boolean isEmpty();
   /**
    * Description: Check if the binary tree is empty
-   * Return: True if is empty, else false
+   * Return: True if binary tree is empty, else false
    */
   
   public int getSize();
@@ -42,6 +44,8 @@ public interface BinaryTreeInterface<T> {
    */
   
   public void clear();
+
+  public Iterator<T> iterator();
   /**
    * Description: Erase all the values in the binary tree
    * Post-condition:  The values in the binary tree are erased
