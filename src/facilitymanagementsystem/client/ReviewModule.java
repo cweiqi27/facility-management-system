@@ -22,41 +22,38 @@ public class ReviewModule {
   private final ListInterface<Review> reviewList = new ArrayList<>();
   private final ListInterface<User> userList = new ArrayList<>();
   private final ListInterface<Facility> facilityList = new ArrayList<>();
-  private int currentIndex = 1;
   private final ClientHelper clientHelper = new ClientHelper();
   private final WordTree wordTree = new WordTree();
   private final BinaryTreeInterface<String> tree = wordTree.getTree();
+  private int currentIndex = 1;
   
-  public ReviewModule() throws IOException {
+  public ReviewModule() throws IOException {}
+  
+  public void start() throws IOException  {
     initializeDummyData();
     reviewMenu();
   }
   
   private void initializeDummyData() {
-    int userIndex = 1;
-    int facilityIndex = 1;
+    Review review = new Review();
     
-    User user1 = new User(userIndex++, "John Doe", "Male", "0123456789");
-    User user2 = new User(userIndex++, "Jane Doe", "Female", "0123456724");
-    User user3 = new User(userIndex++, "Frederic Chopin", "Male", "23418591");
-    User user4 = new User(userIndex++, "Alexander Scriabin", "Male", "1239812390");
-    User user5 = new User(userIndex++, "Clara Schumann", "Female", "0169696789");
-    User user6 = new User(userIndex++, "Sergei Rachmaninoff", "Male", "0169656789");
-    User user7 = new User(userIndex++, "Franz Liszt", "Male", "0189696789");
+    User user1 = new User(1, "Frederic Chopin", "Male", "23418591");
+    User user2 = new User(2, "Alexander Scriabin", "Male", "1239812390");
+    User user3 = new User(3, "Clara Schumann", "Female", "0169696789");
+    User user4 = new User(4, "Sergei Rachmaninoff", "Male", "0169656789");
+    User user5 = new User(5, "Franz Liszt", "Male", "0189696789");
     
     userList.add(user1);
     userList.add(user2);
     userList.add(user3);
     userList.add(user4);
     userList.add(user5);
-    userList.add(user6);
-    userList.add(user7);
     
-    Facility facility1 = new Facility(facilityIndex++, "Sports Complex", "Indoor", "A01");
-    Facility facility2 = new Facility(facilityIndex++, "Basketball Court", "Outdoor", "B01");
-    Facility facility3 = new Facility(facilityIndex++, "Classroom", "Indoor", "C01");
-    Facility facility4 = new Facility(facilityIndex++, "Discussion Room", "Indoor", "D01");
-    Facility facility5 = new Facility(facilityIndex++, "ICT Lab", "Indoor", "E01");
+    Facility facility1 = new Facility(1, "Sports Complex", "Indoor", "A01", review);
+    Facility facility2 = new Facility(2, "Basketball Court", "Outdoor", "B01", review);
+    Facility facility3 = new Facility(3, "Classroom", "Indoor", "C01", review);
+    Facility facility4 = new Facility(4, "Discussion Room", "Indoor", "D01", review);
+    Facility facility5 = new Facility(5, "ICT Lab", "Indoor", "E01", review);
     
     facilityList.add(facility1);
     facilityList.add(facility2);
@@ -91,13 +88,15 @@ public class ReviewModule {
         default -> {
         }
       }
+      
+    continuePrompt();
+    
     } catch(Exception e) {
       System.out.println("Error occured");
       System.out.println("Exception: " + e);
       scanner.nextLine();
     }
     
-    continuePrompt();
   }
   
   private void addReview() {
@@ -108,9 +107,10 @@ public class ReviewModule {
     Review review = new Review();
     review.setReviewId(currentIndex);
     
-    System.out.println("Users: ");
-    
+    review.setUser(addReviewUser());
         
+    review.setFacilityList(addReviewFacility());
+    
     System.out.print("Title: ");
     String title = scanner.nextLine();
     review.setReviewTitle(replaceWords(title));
@@ -129,7 +129,7 @@ public class ReviewModule {
     displaySingleReview(review);
     System.out.println("Create(y) Cancel(n)");
     
-    if(!clientHelper.optionScanner('c', scanner).equals("y") ) {
+    if(!clientHelper.optionScanner('c', scanner).equalsIgnoreCase("y") ) {
       System.out.println("\nReview creation cancelled");
       return;
     }
@@ -137,6 +137,51 @@ public class ReviewModule {
     reviewList.add(review);
     currentIndex++;
     System.out.println("\nReview created");
+  }
+  
+  private User addReviewUser() {
+    System.out.println("Users: ");
+    displayUserHeader();
+    for(int i = 0; i < userList.size(); i++) {
+      User user = userList.get(i);
+      displayDataColumn(user);
+    }
+    System.out.print("Select user: ");
+    return userList.get(scanner.nextInt());
+  }
+  
+  private ListInterface<Facility> addReviewFacility() {
+    ListInterface<Facility> list = new ArrayList<>();
+    
+    System.out.println("Select facility(s) to review: ");
+    displayFacilityHeader();
+    for(int i = 0; i < facilityList.size(); i++) {
+      Facility facility = facilityList.get(i);
+      displayDataColumn(facility);
+    }
+              
+    return addReviewFacility(list);
+  }
+  
+  private ListInterface<Facility> addReviewFacility(ListInterface<Facility> list) {
+    System.out.print("Select facility: ");
+    int facilityOptionId = scanner.nextInt();
+    Facility facilityOption = facilityList.get(facilityOptionId - 1);
+    if(list.contains(facilityOption)) {
+      System.out.println("Facility already added.");
+      addReviewFacility(list);
+    }
+    list.add(facilityList.get(facilityOptionId));
+    
+    System.out.println("Do you still want to add another facility?");
+    System.out.println("Yes(y) No(n)");
+    String option = clientHelper.optionScanner('c', scanner);
+    scanner.nextLine();
+    
+    if(option.equalsIgnoreCase("y"))
+      addReviewFacility(list);
+    
+    return list;
   }
   
   private void updateReview() {
@@ -215,7 +260,7 @@ public class ReviewModule {
       System.out.println("Are you sure you want to delete all the reviews in the system?");
       System.out.println("This action is irreversible.");
       System.out.println("Delete(y) Cancel(n)");
-      if(clientHelper.optionScanner('c', scanner).equals("y")) {
+      if(clientHelper.optionScanner('c', scanner).equalsIgnoreCase("y")) {
         reviewList.clear();
         System.out.println("All review data has been successfully wiped");
         return;
@@ -270,7 +315,14 @@ public class ReviewModule {
   }
   
   private void displaySingleReview(Review review) {
-    System.out.println("ID: " + review.getReviewId());
+    System.out.println("Author: " + review.getUser().getName());
+    System.out.print("Facility(s): ");
+    for(int i = 0; i < facilityList.size(); i++) {
+      Facility facility = review.getFacilityList().get(i);
+      if(facility != null)
+        System.out.print(facility.getfacName() + ", ");
+    }
+    System.out.println("\nID: " + review.getReviewId());
     System.out.println("Title: " + review.getReviewTitle());
     System.out.println("Content: " + review.getReviewContent());
     System.out.println("Rating: " + review.getRating());
@@ -291,10 +343,13 @@ public class ReviewModule {
     
     switch (option) {
       case 1 -> {
-        displayAllReview();
+        displayReviewByUser();
         break;
       }
       case 2 -> {
+        displayReviewByFacility();
+      }
+      case 3 -> {
         int reviewNum = Math.min(5, reviewList.size());
         System.out.print("Last " + reviewNum + " reviews being made:\n");
         Review reviewArr[] = latestReviews(reviewNum);
@@ -304,13 +359,13 @@ public class ReviewModule {
         }
         break;
       }
-      case 3 -> {
+      case 4 -> {
         System.out.print("Longest POSITIVE streak: " + longestReviewStreak("POSITIVE") + "\n");
         System.out.print("Longest NEUTRAL streak: " + longestReviewStreak("NEUTRAL") + "\n");
         System.out.print("Longest NEGATIVE streak: " + longestReviewStreak("NEGATIVE") + "\n");
         break;
       }
-      case 4 -> {
+      case 5 -> {
         int[] reviewScores = reviewScoreReport();
         System.out.print("Highest score: " + reviewScores[0] + "\n");
         System.out.print("Lowest score: " + reviewScores[1] + "\n");
@@ -320,6 +375,27 @@ public class ReviewModule {
         return;
       }
     }
+  }
+  
+  private void displayReviewByUser() {
+    displayUserHeader();
+    for(int i = 0; i < userList.size(); i++) {
+      User user = userList.get(i);
+      displayDataColumn(user);
+    }
+    System.out.print("Select user to review: ");
+    int option = scanner.nextInt();
+    User user = userList.get(option);
+    
+    for(int i = 0; i < reviewList.size(); i++) {
+      Review review = reviewList.get(i);
+      if(review.getUser() == user)
+        displayDataColumn(review);
+    }
+  }
+  
+  private void displayReviewByFacility() {
+    
   }
      
   // dictionary 'submodule' that lets user to insert, search, and delete
@@ -577,12 +653,6 @@ public class ReviewModule {
     return Arrays.stream(numbers).min().orElse(Integer.MAX_VALUE);
   }
   
-  private void continuePrompt() throws IOException {
-    System.out.println("Continue? (y)(n)");
-    String contOption = clientHelper.optionScanner('c', scanner);
-    if(contOption.equals("y")) reviewMenu();
-  }
-  
   private int longestReviewStreak(String type) {
     int streak = 0;
     int maxStreak = 0;
@@ -618,14 +688,28 @@ public class ReviewModule {
     
     System.out.println("-------------------------------------------------------------------------"
         + "---------------------------------------------------"
-        + "-----------------------------------"
-        + "---------------------------------------------------");
-    System.out.printf("%5s %-20s %-50s %-5s %15s %40s %40s\n", "ID", "Title", 
+        + "-----------------------------------");
+    System.out.printf("%5s %-20s %-50s %-5s %15s %20s %20s\n", "ID", "Title", 
         "Content", "Rating", "Type", "Created", "Last updated");
     System.out.println("-------------------------------------------------------------------------"
         + "---------------------------------------------------"
-        + "-----------------------------------"
-        + "---------------------------------------------------");
+        + "-----------------------------------");
+  }
+  
+  private void displayUserHeader() {
+    if(userList.isEmpty()) {
+      System.out.println("No user found.\n");
+      return;
+    }
+    System.out.printf("%5s %-20s %-10s %-20s \n", "ID", "Name", "Gender", "Phone No.");
+  }
+  
+  private void displayFacilityHeader() {
+    if(facilityList.isEmpty()) {
+      System.out.println("No facility found.\n");
+      return;
+    }
+    System.out.printf("%5s %-20s %-10s %-10s \n", "ID", "Name", "Type", "Venue");
   }
   
   private void displayDataColumn(Review review) {
@@ -634,7 +718,7 @@ public class ReviewModule {
       return;
     } 
     
-    System.out.printf("%5s %-20s %-50s %-5s %15s %40s %40s\n", review.getReviewId(), 
+    System.out.printf("%5s %-20s %-50s %-5s %15s %20s %20s\n", review.getReviewId(), 
           review.getReviewTitle(), review.getReviewContent(), review.getRating(),
           review.getType().toString(), review.getTimestampCreateFormatted(), review.getTimestampUpdateFormatted());
   }
@@ -655,7 +739,7 @@ public class ReviewModule {
       return;
     }
     
-    System.out.printf("%5s %-20s %-10s %-20s \n", facility.getFacId(), 
+    System.out.printf("%5s %-20s %-10s %-10s \n", facility.getFacId(), 
           facility.getfacName(), facility.getfacType(), facility.getfacVenue());
   }
   
@@ -678,5 +762,19 @@ public class ReviewModule {
     reviewScores[2] = sumScore / reviewList.size(); // average score
     
     return reviewScores;
+  }
+  
+  private void continuePrompt() throws IOException {
+    boolean isOut = false;
+    while(!isOut) {
+      System.out.println("Go back to: ");
+      System.out.println("(1) Review Module");
+      System.out.println("(2) Main Menu");
+      int contOption = clientHelper.optionScanner(0, scanner);
+      if(contOption == 1) {
+        reviewMenu();
+        isOut = true;
+      } else if(contOption == 2) isOut = true;
+    }
   }
 }

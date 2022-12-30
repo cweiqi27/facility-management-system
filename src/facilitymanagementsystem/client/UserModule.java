@@ -6,7 +6,9 @@ import facilitymanagementsystem.adt.ListInterface;
 import java.util.Scanner;
 
 public class UserModule {
-    public UserModule() {
+    public UserModule() {}
+    
+    public void start() {
       userModuleMenu();
     }
 

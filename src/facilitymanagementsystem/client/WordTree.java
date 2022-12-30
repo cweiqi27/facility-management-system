@@ -28,8 +28,6 @@ public final class WordTree {
     // split the content and insert them accordingly into the AVL tree
     for(String word: content.split("\\R")) 
       this.tree.insert(word);
-    
-    System.out.println("\nAVL Tree initialized.\n");
   }
   
   protected BinaryTreeInterface<String> getTree() {

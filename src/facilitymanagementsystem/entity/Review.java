@@ -1,6 +1,6 @@
 package facilitymanagementsystem.entity;
 
-import java.util.Date;
+import facilitymanagementsystem.adt.ListInterface;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -16,7 +16,7 @@ public class Review {
   private int rating;
   private final LocalDateTime timestampCreate;
   private LocalDateTime timestampUpdate;
-  private Facility facility;
+  private ListInterface<Facility> facilityList;
   private User user;
   
   public Review() {
@@ -70,6 +70,14 @@ public class Review {
     return formatDate(timestampUpdate);
   }
   
+  public User getUser() {
+    return this.user;
+  }
+  
+  public ListInterface<Facility> getFacilityList() {
+    return this.facilityList;
+  }
+  
   public void setReviewId(int reviewId) {
     this.reviewId = reviewId;
   }
@@ -93,6 +101,14 @@ public class Review {
   public void setTimestampUpdate() {
     this.timestampUpdate = LocalDateTime.now();
   }
+  
+  public void setUser(User user) {
+    this.user = user;
+  }
+  
+  public void setFacilityList(ListInterface<Facility> facilityList) {
+    this.facilityList = facilityList;
+  }
    
   public enum reviewType {
     POSITIVE,
@@ -110,7 +126,7 @@ public class Review {
   }
   
   private String formatDate(LocalDateTime timestamp) {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EE, d/MM/yy, h:mma");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yy, h:mma");
     return timestamp.format(formatter);
   }
   

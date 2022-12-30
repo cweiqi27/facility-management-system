@@ -18,7 +18,9 @@ public class FacilityModule {
     private final Scanner s = new Scanner(System.in);
     ListInterface <Facility> list=new ArrayList<>(); //Creating arraylist 
     
-    public FacilityModule() {
+    public FacilityModule() {}
+    
+    public void start() {
       facilityModuleMenu();
     }
     

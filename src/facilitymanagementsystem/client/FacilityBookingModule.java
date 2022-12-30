@@ -11,9 +11,11 @@ import java.util.Scanner;
 public class FacilityBookingModule {
     private final ListInterface<FacilityBook> bookingList = new BookingList<>(); 
     
-    public FacilityBookingModule() {
-        record();
-        booking();
+    public FacilityBookingModule() {}
+    
+    public void start() {
+      record();
+      booking();
     }
 
     private void record() {
