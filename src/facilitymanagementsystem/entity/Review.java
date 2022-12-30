@@ -1,8 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package facilitymanagementsystem.entity;
+
+import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -14,22 +14,27 @@ public class Review {
   private String reviewContent;
   private reviewType type;
   private int rating;
-//  private Booking booking;
-//  private Facility facility;
-//  private User user;
+  private final LocalDateTime timestampCreate;
+  private LocalDateTime timestampUpdate;
+  private Facility facility;
+  private User user;
   
   public Review() {
+    this.timestampCreate = LocalDateTime.now();
+    this.timestampUpdate = LocalDateTime.now();
   }
   
-  public Review(int reviewId, String reviewTitle, String reviewContent, reviewType type, int rating) {
+  public Review(int reviewId, String reviewTitle, String reviewContent, int rating) {
     this.reviewId = reviewId;
     this.reviewTitle = reviewTitle;
     this.reviewContent = reviewContent;
-    this.type = type;
     this.rating = rating;
+    this.type = evaluateType();
+    this.timestampCreate = LocalDateTime.now();
+    this.timestampUpdate = LocalDateTime.now();
   }
   
-  public int getreviewId() {
+  public int getReviewId() {
     return this.reviewId;
   }
   
@@ -40,16 +45,32 @@ public class Review {
   public String getReviewContent() {
     return this.reviewContent;
   }
+     
+  public int getRating() {
+    return this.rating;
+  }
   
   public reviewType getType() {
     return this.type;
   }
   
-  public int getRating() {
-    return this.rating;
+  public LocalDateTime getTimestampCreate() {
+    return this.timestampCreate;
   }
   
-  public void setreviewId(int reviewId) {
+  public LocalDateTime getTimestampUpdate() {
+    return this.timestampUpdate;
+  }
+  
+  public String getTimestampCreateFormatted() {
+    return formatDate(timestampCreate);
+  }
+  
+  public String getTimestampUpdateFormatted() {
+    return formatDate(timestampUpdate);
+  }
+  
+  public void setReviewId(int reviewId) {
     this.reviewId = reviewId;
   }
   
@@ -61,12 +82,16 @@ public class Review {
     this.reviewContent = reviewContent;
   }
   
-  public void setType(reviewType type) {
-    this.type = type;
-  }
-  
   public void setRating(int rating) {
     this.rating = rating;
+  }
+  
+  public void setType() {
+    this.type = evaluateType();
+  }
+  
+  public void setTimestampUpdate() {
+    this.timestampUpdate = LocalDateTime.now();
   }
    
   public enum reviewType {
@@ -75,9 +100,24 @@ public class Review {
     NEUTRAL
   }
   
+  private reviewType evaluateType() {
+    if(this.rating > 3)
+      return reviewType.POSITIVE;
+    else if(this.rating == 3)
+      return reviewType.NEUTRAL;
+    else
+      return reviewType.NEGATIVE;
+  }
+  
+  private String formatDate(LocalDateTime timestamp) {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EE, d/MM/yy, h:mma");
+    return timestamp.format(formatter);
+  }
+  
+  
   @Override
   public String toString() {
-    return "Review {reviewId=' " + reviewId + "'. reviewTitle=" + reviewTitle + ", reviewContent=" 
-        + reviewContent + ", type=" + type + ", rating=" + rating + "}";
+    return "Review {reviewId=" + reviewId + ", reviewTitle=" + reviewTitle + ", reviewContent=" 
+        + reviewContent + ", rating=" + rating + ", type=" + type + ", timestampCreate=" + timestampCreate + "}";
   }
 }

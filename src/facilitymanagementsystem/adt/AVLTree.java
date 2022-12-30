@@ -1,5 +1,9 @@
 package facilitymanagementsystem.adt;
 
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+import java.util.Stack;
+
 /**
  *
  * @author Chan Wei Qi
@@ -141,6 +145,25 @@ public class AVLTree<T extends Comparable<T>> implements BinaryTreeInterface<T> 
     return true;
   }
   
+  
+  @Override
+  public int getFrequency(T value) {
+    return getFrequency(root, value);
+  }
+  
+  private int getFrequency(Node node, T value) {
+    int freq = 0;
+    if(node == null) return freq;
+    
+    if(value.compareTo(node.data) < 0) 
+      return getFrequency(node.left, value);
+    
+    if(value.compareTo(node.data) > 0) 
+      return getFrequency(node.right, value);
+    
+    return node.frequency;
+  }
+  
   @Override
   public boolean remove(T value) {
     if(value == null) return false;
@@ -223,50 +246,53 @@ public class AVLTree<T extends Comparable<T>> implements BinaryTreeInterface<T> 
     }
   }
   
-   // returns as iterator to traverse the tree in order
   @Override
-  public java.util.Iterator<T> iterator() {
+  public Iterator<T> getIterator() {
+    return new AVLTreeIterator();
+  }
+  
+   // iterator to be used to traverse the tree in order
+  private class AVLTreeIterator implements Iterator<T> {
     final int expectedNodeCount = nodeCount;
-    final java.util.Stack<Node> stack = new java.util.Stack<>();
-    stack.push(root);
+    Stack<Node> stack = new Stack<>();
+    Node trav = root;
+   
+    public AVLTreeIterator() {
+      stack.push(root);
+    }
 
-    return new java.util.Iterator<T>() {
-      Node trav = root;
+    @Override
+    public boolean hasNext() {
+      if(expectedNodeCount != nodeCount) 
+        throw new ConcurrentModificationException();
 
-      @Override
-      public boolean hasNext() {
-        if (expectedNodeCount != nodeCount) 
-          throw new java.util.ConcurrentModificationException();
-        
-        return !isEmpty() && !stack.isEmpty();
+      return !isEmpty() && !stack.isEmpty();
+    }
+
+    @Override      
+    public T next() {
+      if(expectedNodeCount != nodeCount) 
+        throw new ConcurrentModificationException();
+
+      while(trav != null && trav.left != null) {
+        stack.push(trav.left);
+        trav = trav.left;
       }
 
-      @Override      
-      public T next() {
+      Node node = stack.pop();
 
-        if (expectedNodeCount != nodeCount) 
-          throw new java.util.ConcurrentModificationException();
-
-        while (trav != null && trav.left != null) {
-          stack.push(trav.left);
-          trav = trav.left;
-        }
-
-        Node node = stack.pop();
-
-        if (node.right != null) {
-          stack.push(node.right);
-          trav = node.right;
-        }
-
-        return node.data;
+      if(node.right != null) {
+        stack.push(node.right);
+        trav = node.right;
       }
 
-      @Override
-      public void remove() {
-        throw new UnsupportedOperationException();
-      }
-    };
+      return node.data;
+    }
+
+    @Override
+    public void remove() {
+      throw new UnsupportedOperationException();
+    }
   }
 }
  

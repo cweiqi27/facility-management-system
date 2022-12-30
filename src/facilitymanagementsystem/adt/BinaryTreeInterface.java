@@ -8,6 +8,8 @@ import java.util.Iterator;
  * @param <T>
  */
 public interface BinaryTreeInterface<T> {
+  public Iterator<T> getIterator();
+  
   public boolean insert(T value);
   /**
    * Description: Insert a value into the binary tree
@@ -43,9 +45,13 @@ public interface BinaryTreeInterface<T> {
    * Return:  The number of nodes
    */
   
+  public int getFrequency(T value);
+  /**
+   * Description: Get the number of frequency that the node has been appeared in the binary tree
+   * Return:  The node frequency of T value
+   */
+  
   public void clear();
-
-  public Iterator<T> iterator();
   /**
    * Description: Erase all the values in the binary tree
    * Post-condition:  The values in the binary tree are erased
