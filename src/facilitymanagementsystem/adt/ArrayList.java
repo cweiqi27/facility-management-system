@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package facilitymanagementsystem.adt;
 
 /**
@@ -13,7 +8,7 @@ package facilitymanagementsystem.adt;
 public class ArrayList<T> implements ListInterface<T>{
   private T[] array;
   private int numberOfEntries;
-  private static final int DEFAULT_CAPACITY = 5;
+  private static final int DEFAULT_CAPACITY = 50;
   
   public ArrayList() {
     this(DEFAULT_CAPACITY);

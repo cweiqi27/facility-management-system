@@ -127,7 +127,7 @@ public class FacilityBookingModule {
                 
                 System.out.print("Your name:");
                 String name = in.nextLine();
-                System.out.print("The time duration (1-2): ");
+                System.out.print("The time duration (1-2)Hour: ");
                 String duration = in.nextLine();
                 
                 String facility = null;
@@ -163,7 +163,7 @@ public class FacilityBookingModule {
     //delete
     private void delete() {
         System.out.println("**************");
-        System.out.println("Delete The Item Page \n**************\n");
+        System.out.println("Welcome to delete Facility Booked Page \n**************\n");
         String response;
     	boolean existence;
     	do{	
@@ -182,16 +182,16 @@ public class FacilityBookingModule {
                     if(checkYesNo(decision) == true){
                         if(Character.toUpperCase(decision.charAt(0)) == 'Y'){
                             bookingList.remove(num);
-                            System.out.println("Booking Is Deleted Successfully!!!");
+                            System.out.println("Booked Is Deleted Successfully!!!");
                         }
                     }
 	    	}
 	    }
 	    if (existence == false){
-                System.out.print("\nThe Item ID does not exist");
+                System.out.print("\nThe Facility Booked Name does not exist");
 	    }
 	    do{
-                System.out.print("\nDid you need delete more item?");
+                System.out.print("\nDid you need delete more Facility Booked?");
                 response = s.nextLine();
             }while(checkYesNo(response)== false && checkYesNo(response) == false);
     	}while(Character.toUpperCase(response.charAt(0)) == 'Y');
@@ -279,7 +279,7 @@ public class FacilityBookingModule {
                     }
                 }
                 if (existence == false){
-                    System.out.println("The item name is non-existent.");
+                    System.out.println("The Facility Booked name is non-existent.");
                 }
                 do{
                     System.out.print("Did want to modify more booking?");

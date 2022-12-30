@@ -6,8 +6,8 @@ import java.util.Scanner;
  *
  * @author Chan Wei Qi
  * 
- * these are the helper methods that can be used in client classes,
- * mainly to keep the program more DRY
+ * helper methods that can be used in client classes
+ * for DRY purpose
  */
 public class ClientHelper {
   public ClientHelper() {}

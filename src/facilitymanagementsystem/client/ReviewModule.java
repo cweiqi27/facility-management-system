@@ -22,9 +22,9 @@ public class ReviewModule {
   private final ListInterface<Review> reviewList = new ArrayList<>();
   private final ListInterface<User> userList = new ArrayList<>();
   private final ListInterface<Facility> facilityList = new ArrayList<>();
-  private final ClientHelper clientHelper = new ClientHelper();
   private final WordTree wordTree = new WordTree();
   private final BinaryTreeInterface<String> tree = wordTree.getTree();
+  private final ClientHelper clientHelper = new ClientHelper();
   private int currentIndex = 1;
   
   public ReviewModule() throws IOException {}
@@ -49,11 +49,11 @@ public class ReviewModule {
     userList.add(user4);
     userList.add(user5);
     
-    Facility facility1 = new Facility(1, "Sports Complex", "Indoor", "A01", review);
-    Facility facility2 = new Facility(2, "Basketball Court", "Outdoor", "B01", review);
-    Facility facility3 = new Facility(3, "Classroom", "Indoor", "C01", review);
-    Facility facility4 = new Facility(4, "Discussion Room", "Indoor", "D01", review);
-    Facility facility5 = new Facility(5, "ICT Lab", "Indoor", "E01", review);
+    Facility facility1 = new Facility(1, "Sports Complex", "Indoor", "A01");
+    Facility facility2 = new Facility(2, "Basketball Court", "Outdoor", "B01");
+    Facility facility3 = new Facility(3, "Classroom", "Indoor", "C01");
+    Facility facility4 = new Facility(4, "Discussion Room", "Indoor", "D01");
+    Facility facility5 = new Facility(5, "ICT Lab", "Indoor", "E01");
     
     facilityList.add(facility1);
     facilityList.add(facility2);
@@ -111,6 +111,7 @@ public class ReviewModule {
         
     review.setFacilityList(addReviewFacility());
     
+    scanner.nextLine();
     System.out.print("Title: ");
     String title = scanner.nextLine();
     review.setReviewTitle(replaceWords(title));
@@ -147,7 +148,7 @@ public class ReviewModule {
       displayDataColumn(user);
     }
     System.out.print("Select user: ");
-    return userList.get(scanner.nextInt());
+    return userList.get(scanner.nextInt() - 1);
   }
   
   private ListInterface<Facility> addReviewFacility() {
@@ -165,18 +166,19 @@ public class ReviewModule {
   
   private ListInterface<Facility> addReviewFacility(ListInterface<Facility> list) {
     System.out.print("Select facility: ");
-    int facilityOptionId = scanner.nextInt();
-    Facility facilityOption = facilityList.get(facilityOptionId - 1);
+    int facilityOptionId = scanner.nextInt() - 1;
+    Facility facilityOption = facilityList.get(facilityOptionId);
+    scanner.nextLine();
     if(list.contains(facilityOption)) {
       System.out.println("Facility already added.");
-      addReviewFacility(list);
+      System.out.println("Continue(y) Add another(n)");
+      return clientHelper.optionScanner('c', scanner).equalsIgnoreCase("y") ? list : addReviewFacility(list);
     }
     list.add(facilityList.get(facilityOptionId));
     
     System.out.println("Do you still want to add another facility?");
     System.out.println("Yes(y) No(n)");
     String option = clientHelper.optionScanner('c', scanner);
-    scanner.nextLine();
     
     if(option.equalsIgnoreCase("y"))
       addReviewFacility(list);
@@ -378,24 +380,56 @@ public class ReviewModule {
   }
   
   private void displayReviewByUser() {
+    boolean isExist = false;
+    
+    if(reviewList.isEmpty()) {
+      System.out.println("No review found");
+      return;
+    }
     displayUserHeader();
     for(int i = 0; i < userList.size(); i++) {
       User user = userList.get(i);
       displayDataColumn(user);
     }
-    System.out.print("Select user to review: ");
+    System.out.print("Select user: ");
     int option = scanner.nextInt();
     User user = userList.get(option);
     
     for(int i = 0; i < reviewList.size(); i++) {
       Review review = reviewList.get(i);
-      if(review.getUser() == user)
+      if(review.getUser() == user) {
         displayDataColumn(review);
+        isExist = true;
+      }
     }
+    
+    if(!isExist) System.out.println("No review found");
   }
   
   private void displayReviewByFacility() {
+    boolean isExist = false;
+    if(reviewList.isEmpty()) {
+      System.out.println("No review found");
+      return;
+    }
     
+    System.out.print("Select facility: ");
+    int option = scanner.nextInt();
+    Facility facility = facilityList.get(option);
+    
+    // slow o(n^2) naive approach...
+    for(int i = 0; i < reviewList.size(); i++) {
+      Review review = reviewList.get(i);
+      ListInterface<Facility> facilityList = review.getFacilityList();
+      for(int j = 0; j < facilityList.size(); j++) {
+        if(facilityList.get(i) == facility) {
+          displayDataColumn(review);
+          isExist = true;
+        }
+      }
+    }
+    
+    if(!isExist) System.out.println("No review found");
   }
      
   // dictionary 'submodule' that lets user to insert, search, and delete
@@ -407,6 +441,7 @@ public class ReviewModule {
     System.out.println("(1)Insert word");
     System.out.println("(2)Search word");
     System.out.println("(3)Delete word");
+    System.out.println("(4)List all words in dictionary");
     System.out.println("Select option -");
     
     int option = clientHelper.optionScanner(0, scanner);
@@ -416,6 +451,7 @@ public class ReviewModule {
       case 1 -> addWord();
       case 2 -> searchWord();
       case 3 -> deleteWord();
+      case 4 -> displayAllWords();
       default -> {}
     }
   }
@@ -476,6 +512,12 @@ public class ReviewModule {
         wordTree.removeWord(input);
       scanner.nextLine();
     }
+  }
+  
+  private void displayAllWords() {
+    for(String word: wordTree.getAllWords()) 
+      System.out.println(word);
+    System.out.println("\nWord count: " + wordTree.getTreeSize());
   }
   
   // method that replace the mispelled words
@@ -701,7 +743,11 @@ public class ReviewModule {
       System.out.println("No user found.\n");
       return;
     }
+    System.out.println("-------------------------------------------------------------------------"
+        + "---------------------------------------------------");
     System.out.printf("%5s %-20s %-10s %-20s \n", "ID", "Name", "Gender", "Phone No.");
+    System.out.println("-------------------------------------------------------------------------"
+        + "---------------------------------------------------");
   }
   
   private void displayFacilityHeader() {
@@ -709,7 +755,11 @@ public class ReviewModule {
       System.out.println("No facility found.\n");
       return;
     }
+    System.out.println("-------------------------------------------------------------------------"
+        + "---------------------------------------------------");
     System.out.printf("%5s %-20s %-10s %-10s \n", "ID", "Name", "Type", "Venue");
+    System.out.println("-------------------------------------------------------------------------"
+        + "---------------------------------------------------");
   }
   
   private void displayDataColumn(Review review) {

@@ -8,6 +8,18 @@ import java.util.Stack;
  *
  * @author Chan Wei Qi
  * @param <T>
+ * 
+ * AVL Tree is a type of self-balancing binary search tree (BST),
+ * Fun fact: it's the first SBBST ever being discovered,
+ * invented in 1962 by Georgy Adelson-Velsky and Evgenii Landis.
+ * 
+ * It works by determining the case of the tree (left-left case, left-right case)
+ * and perform left and right rotation on the nodes to balance the tree.
+ * 
+ * The tree is balanced when the left and right heights are  > -1 && > -1.
+ * 
+ * The average and worst time complexity are o(logn), making it faster than
+ * BST, which in worst cases can be o(n), just the same as a linked list.
  */
 public class AVLTree<T extends Comparable<T>> implements BinaryTreeInterface<T> {
   private Node root;
@@ -269,11 +281,13 @@ public class AVLTree<T extends Comparable<T>> implements BinaryTreeInterface<T> 
       return !isEmpty() && !stack.isEmpty();
     }
 
+    // inorder traverse
     @Override      
     public T next() {
       if(expectedNodeCount != nodeCount) 
         throw new ConcurrentModificationException();
 
+      // traverse to the lowest value in tree (most left value)
       while(trav != null && trav.left != null) {
         stack.push(trav.left);
         trav = trav.left;
@@ -281,6 +295,9 @@ public class AVLTree<T extends Comparable<T>> implements BinaryTreeInterface<T> 
 
       Node node = stack.pop();
 
+      // if there's a node on the right, then the traverse 
+      // pointer points to the right node, making it 
+      // the next smallest value
       if(node.right != null) {
         stack.push(node.right);
         trav = node.right;
@@ -289,6 +306,8 @@ public class AVLTree<T extends Comparable<T>> implements BinaryTreeInterface<T> 
       return node.data;
     }
 
+    // don't need this as there's already a remove 
+    // method for AVL tree
     @Override
     public void remove() {
       throw new UnsupportedOperationException();
