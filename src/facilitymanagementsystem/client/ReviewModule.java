@@ -171,7 +171,7 @@ public class ReviewModule {
     scanner.nextLine();
     if(list.contains(facilityOption)) {
       System.out.println("Facility already added.");
-      System.out.println("Continue(y) Add another(n)");
+      System.out.println("Add another(y) Continue(n)");
       return clientHelper.optionScanner('c', scanner).equalsIgnoreCase("y") ? list : addReviewFacility(list);
     }
     list.add(facilityList.get(facilityOptionId));
@@ -340,6 +340,7 @@ public class ReviewModule {
     System.out.println("(3)Latest Reviews");
     System.out.println("(4)Longest review streak");
     System.out.println("(5)Review scores");
+    System.out.println("Detailed review list");
     System.out.println("Select option: -");
     int option = clientHelper.optionScanner(0, scanner);
     
@@ -372,6 +373,11 @@ public class ReviewModule {
         System.out.print("Highest score: " + reviewScores[0] + "\n");
         System.out.print("Lowest score: " + reviewScores[1] + "\n");
         System.out.print("Average score: " + reviewScores[2] + "\n");
+      }
+      case 6 -> {
+        System.out.println("\nDetailed review list:\n");
+        for(int i = 0; i < reviewList.size(); i++)
+            displaySingleReview(reviewList.get(i));
       }
       default -> {
         return;
@@ -413,7 +419,7 @@ public class ReviewModule {
       return;
     }
     
-    System.out.print("Select facility: ");
+    System.out.print("Select facility id: ");
     int option = scanner.nextInt();
     Facility facility = facilityList.get(option);
     
@@ -691,6 +697,7 @@ public class ReviewModule {
     return a == b ? 0 : 1;
   }
   
+  // take in one or more integer values and 
   private int min(int... numbers) {
     return Arrays.stream(numbers).min().orElse(Integer.MAX_VALUE);
   }
