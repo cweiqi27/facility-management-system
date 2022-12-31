@@ -1,5 +1,6 @@
 package facilitymanagementsystem;
 
+import facilitymanagementsystem.client.AdminModule;
 import facilitymanagementsystem.client.ClientHelper;
 import facilitymanagementsystem.client.FacilityBookingModule;
 import facilitymanagementsystem.client.FacilityModule;
@@ -21,6 +22,7 @@ public class FacilityManagementSystem {
     UserModule userModule = new UserModule();
     FacilityBookingModule facilityBookingModule = new FacilityBookingModule();
     ReviewModule reviewModule = new ReviewModule();
+    AdminModule adminModule = new AdminModule();
        
     
     System.out.println("*******************************************");
@@ -53,7 +55,8 @@ public class FacilityManagementSystem {
           break;
         }
         case 5 -> {
-
+          adminModule.start();
+          break;
         }
         default->{}
       }
