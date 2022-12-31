@@ -6,6 +6,7 @@ import facilitymanagementsystem.adt.ListInterface;
 import facilitymanagementsystem.entity.Facility;
 import facilitymanagementsystem.entity.Review;
 import facilitymanagementsystem.entity.User;
+import facilitymanagementsystem.adt.LinkedList;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.ArrayDeque;
@@ -530,7 +531,7 @@ public class ReviewModule {
   private String replaceWords(String passage) {
     ListInterface<String> wrongWordList = new ArrayList<>();
     ListInterface<String> tempWordList = new ArrayList<>();
-    Queue<String> separatorQueue = getSeperatorQueue(passage);
+    ListInterface<String> separatorQueue = getSeperatorQueue(passage);
     
     // split the passage/ paragraph into string of arrays, then add them all into
     // temporary word list, if it does not exist in the tree then also add them 
@@ -559,7 +560,7 @@ public class ReviewModule {
   }
   
   // overloading method to decouple replace words functions
-  private String replaceWords(ListInterface<String> tempWordList, ListInterface<String> wrongWordList, Queue separatorQueue) {
+  private String replaceWords(ListInterface<String> tempWordList, ListInterface<String> wrongWordList, ListInterface<String> separatorQueue) {
     String passage = "";
     
     for(int i = 0; i < wrongWordList.size(); i++) {
@@ -612,8 +613,8 @@ public class ReviewModule {
     for(int i = 0; i < tempWordList.size(); i++) {
       String word = tempWordList.get(i);
       passage += word;
-      if(!passage.equals("") && separatorQueue.peek() != null)
-        passage += separatorQueue.poll();
+      if(!passage.equals("") && separatorQueue.get(0) != null)
+        passage += separatorQueue.remove(1);
     }
     
     return passage;
@@ -625,8 +626,8 @@ public class ReviewModule {
   }
   
   // put separators (comma, whitespace, dot) into a queue
-  private Queue<String> getSeperatorQueue(String passage) {
-    Queue<String> separatorQueue = new ArrayDeque<>();
+  private ListInterface<String> getSeperatorQueue(String passage) {
+    ListInterface<String> separatorQueue = new LinkedList<>();
     for(int i = 0; i < passage.length(); i++) {
       char c = passage.charAt(i);
       if(c == ' ' || c == ',' || c == '.') 

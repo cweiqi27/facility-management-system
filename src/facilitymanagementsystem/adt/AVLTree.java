@@ -4,6 +4,7 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.Stack;
 
+
 /**
  *
  * @author Chan Wei Qi
@@ -246,7 +247,7 @@ public class AVLTree<T extends Comparable<T>> implements BinaryTreeInterface<T> 
     return root == null;
   }
 
-  private class Node {
+  class Node {
     T data;
     int height;
     int frequency;
@@ -264,7 +265,7 @@ public class AVLTree<T extends Comparable<T>> implements BinaryTreeInterface<T> 
   }
   
    // iterator to be used to traverse the tree in order
-  private class AVLTreeIterator implements Iterator<T> {
+  private class AVLTreeIterator implements Iterator<T>  {
     final int expectedNodeCount = nodeCount;
     Stack<Node> stack = new Stack<>();
     Node trav = root;
