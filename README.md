@@ -2,7 +2,7 @@
 
 _by Thomas, Wen Jie, Jia Heng, Yuu Sheng, Wei Qi_
 
-A simple CLI program that showcsases the use of some ADTs included in the Java Collections Framework. </br>
+A simple CLI program that showcases the use of some ADTs included in the Java Collections Framework. </br>
 The ADT are implemented manually without the use of the Collections framework.
 
 ## Technologies
