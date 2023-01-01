@@ -45,7 +45,7 @@ public class Review {
   public String getReviewContent() {
     return this.reviewContent;
   }
-     
+
   public int getRating() {
     return this.rating;
   }
@@ -109,7 +109,7 @@ public class Review {
   public void setFacilityList(ListInterface<Facility> facilityList) {
     this.facilityList = facilityList;
   }
-   
+
   public enum reviewType {
     POSITIVE,
     NEGATIVE,

@@ -40,13 +40,13 @@ public class ArrayStack<T extends Comparable<T>> implements StackInterface<T> {
   @Override
   public T pop() {
     T top = null;
-     System.out.println(top);
+      System.out.println(top);
     if (!isEmpty()) {
       top = array[topIndex];
       array[topIndex] = null;
       topIndex--;
       
-     
+
     } // end if
     
     return top;

@@ -9,9 +9,7 @@ import facilitymanagementsystem.entity.User;
 import facilitymanagementsystem.adt.LinkedList;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.Queue;
 import java.util.Scanner;
 
 /**
@@ -35,9 +33,7 @@ public class ReviewModule {
     reviewMenu();
   }
   
-  private void initializeDummyData() {
-    Review review = new Review();
-    
+  private void initializeDummyData() {    
     User user1 = new User(1, "Frederic Chopin", "Male", "23418591");
     User user2 = new User(2, "Alexander Scriabin", "Male", "1239812390");
     User user3 = new User(3, "Clara Schumann", "Female", "0169696789");
@@ -438,7 +434,7 @@ public class ReviewModule {
     
     if(!isExist) System.out.println("No review found");
   }
-     
+
   // dictionary 'submodule' that lets user to insert, search, and delete
   // word from the AVL tree
   private void dictionaryMenu() {
@@ -550,7 +546,7 @@ public class ReviewModule {
       scanner.nextLine();
       if(choice.toLowerCase().equals("y")) 
         return replaceWords(tempWordList, wrongWordList, separatorQueue);
-       
+
       // if user select no, clear the temporary list and wrong word list, the returns the original word
       wrongWordList.clear();
       tempWordList.clear();
@@ -803,7 +799,6 @@ public class ReviewModule {
   
   private int[] reviewScoreReport() {
     int[] reviewScores = new int[3];
-    int i = 0;
     int highestScore = 0;
     int lowestScore = 5;
     int sumScore = 0;

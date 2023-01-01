@@ -26,7 +26,7 @@ public class AdminModule {
     System.out.println("==================");
     System.out.println("      ADMIN       ");
     System.out.println("==================");
-    System.out.println("(1)Create admin"); // CRUD use ArrayList
+    System.out.println("(1)Create admin"); 
     System.out.println("(2)Edit admin");
     System.out.println("(3)Delete admin");
     System.out.println("(4)Generate Report");
@@ -60,35 +60,18 @@ public class AdminModule {
 
 
   private void createAdmin() {
-    // use adminList.add()
-    // e.g: 
-    // Admin admin = new Admin();
-    // admin.set -> your id, name, etc.;
-    // adminList.add(admin)
-    // adminStack.push(admin.getAdminName())
   }
   
   private void editAdmin() {
-    // use adminList.set(**INTEGER = UR ID**)
   }
   
   private void deleteAdmin() {
-    // use adminList.remove
   }
   
   private void generateReport() {
-    // for latest record, use latestRecord(); latestRecord returns an Array of String
-    // then can display them with for loop
-    // e.g. 
-    // for(Admin admin: latestRecord()) 
-    //  System.out.println(admin);
   }
   
   private String[] latestRecord() {
-    // for latest record, use adminStack.pop();
-    // first pop = newest, second pop = second newest, etc.
-    // use for loop or while loop
-    // e.g. 
     String[] admin = new String[adminStack.size()];
      int i = 0;
      while(adminStack.peek() != null || i < 5) { // 5 for top 5 latest record

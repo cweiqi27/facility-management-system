@@ -17,7 +17,7 @@ import java.util.Stack;
  * It works by determining the case of the tree (left-left case, left-right case)
  * and perform left and right rotation on the nodes to balance the tree.
  * 
- * The tree is balanced when the left and right heights are  > -1 && > -1.
+ * The tree is balanced when the left and right heights are  > -1 && < 1.
  * 
  * The average and worst time complexity are o(logn), making it faster than
  * BST, which in worst cases can be o(n), just the same as a linked list.
@@ -27,7 +27,7 @@ public class AVLTree<T extends Comparable<T>> implements BinaryTreeInterface<T> 
   private int nodeCount;
   
   public AVLTree() {}
-   
+
   public AVLTree(Node root) {
     this.root = null;
     this.nodeCount = 0;
@@ -269,7 +269,7 @@ public class AVLTree<T extends Comparable<T>> implements BinaryTreeInterface<T> 
     final int expectedNodeCount = nodeCount;
     Stack<Node> stack = new Stack<>();
     Node trav = root;
-   
+
     public AVLTreeIterator() {
       stack.push(root);
     }
